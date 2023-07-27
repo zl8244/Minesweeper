@@ -2,9 +2,11 @@ import java.util.*;
 
 public class Minesweeper {
     private int[][] board;
+    private boolean[][] mines;
     
     public Minesweeper (){
         board = new int[5][5];
+        mines = new boolean[5][5];
         initBoard();
     }
 
@@ -21,12 +23,20 @@ public class Minesweeper {
     private void initBoard() {
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
+                board[i][j] = 0;
+                mines[i][j] = false;
+            }
+        }
+        placeMines();
+    }
+
+    private void placeMines() {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
                 int num = randomNumGen();
-                // if the number is 9 then it is a mine
                 if(num == 9) {
                     board[i][j] = num;
-                } else {
-                    board[i][j] = 0;
+                    mines[i][j] = true;
                 }
             }
         }
