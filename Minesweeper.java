@@ -30,6 +30,7 @@ public class Minesweeper {
             }
         }
         placeMines();
+        placeHints();
     }
 
     private void placeMines() {
@@ -43,6 +44,43 @@ public class Minesweeper {
         }
     }
 
+    private void placeHints() {
+        for(int row = 0; row < board.length; row++) {
+            for(int col = 0; col < board[row].length; col++) {
+                if(!mines[row][col]) {
+                    int hint = 0;
+                    // check above
+                    if(row-1 != -1 && mines[row-1][col])
+                        hint++;
+                    // check below
+                    if(row+1 != board.length && mines[row+1][col])
+                        hint++;
+                    // check left
+                    if(col-1 != -1 && mines[row][col-1])
+                        hint++;
+                    // check right
+                    if(col+1 != board[row].length && mines[row][col+1])
+                        hint++;
+                    // check top-left
+                    if((row-1 != -1 && col-1 != -1) && mines[row-1][col-1])
+                        hint++;
+                    // check top-right
+                    if((row-1 != -1 && col+1 != board[row].length) && mines[row-1][col+1])
+                        hint++;
+                    // check bottom-left
+                    if((row+1 != board.length && col-1 != -1) && mines[row+1][col-1])
+                        hint++;
+                    // check bottom-right
+                    if((row+1 != board.length && col+1 != board[row].length) && mines[row+1][col+1])
+                        hint++;
+                    hints[row][col] = hint;
+                } else {
+                    hints[row][col] = 9;
+                }
+            }
+        }
+    }
+
     private void printRow(String[] row) {
         for(String i : row) {
             System.out.print(i + " ");
@@ -50,9 +88,34 @@ public class Minesweeper {
         System.out.println();
     }
 
+    private void printHints(int[] row) {
+        for(int i : row) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
+    private void printMines(boolean[] row) {
+        for(boolean i : row) {
+            if(i)
+                System.out.print(i + "  ");
+            else
+                System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
     private void printBoard() {
         for(String[] row : board) {
             printRow(row);
+        }
+
+        for(int[] row : hints) {
+            printHints(row);
+        }
+
+        for(boolean[] row : mines) {
+            printMines(row);
         }
     }
 
