@@ -6,6 +6,7 @@ public class Minesweeper {
     private int[][] hints;
     private boolean[][] revealedBoard;
     private boolean winGame;
+    private boolean loseGame;
     
     public Minesweeper (){
         board = new String[5][5];
@@ -13,14 +14,17 @@ public class Minesweeper {
         hints = new int[5][5];
         revealedBoard = new boolean[5][5];
         winGame = false;
+        loseGame = false;
         initBoard();
     }
 
     private boolean checkWinGame() {
         for(int row = 0; row < revealedBoard.length; row++) {
             for(int col = 0; col < revealedBoard[row].length; col++) {
-                if(!revealedBoard[row][col])
-                    return false;
+                if(!mines[row][col]) {
+                    if(!revealedBoard[row][col])
+                        return false;
+                }
             }
         }
         return true;
@@ -120,16 +124,6 @@ public class Minesweeper {
         System.out.println();
     }
 
-    private void printMines(boolean[] row) {
-        for(boolean i : row) {
-            if(i)
-                System.out.print(i + "  ");
-            else
-                System.out.print(i + " ");
-        }
-        System.out.println();
-    }
-
     private void printBoard() {
         for(String[] row : board) {
             printRow(row);
@@ -138,20 +132,37 @@ public class Minesweeper {
         for(int[] row : hints) {
             printHints(row);
         }
+    }
 
-        for(boolean[] row : mines) {
-            printMines(row);
+    private void parseInput(String coords) {
+        String[] coordinates = coords.split(",");
+        int x = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
+        revealSpace(x, y);
+    }
+
+    private void revealSpace(int x, int y){
+        if(mines[x][y]) {
+            System.out.println("You revealed a mine! You Lose!");
+            loseGame = true;
+        } else if(revealedBoard[x][y]) {
+            System.out.println("You already revealed this space. Try Again.");
+        } else {
+            board[x][y] = Integer.toString(hints[x][y]);
+            revealedBoard[x][y] = true;
         }
     }
 
     public void runGame() {
         Scanner scan = new Scanner(System.in);
-        //while(!winGame) {
+        while(!winGame && !loseGame) {
             printBoard();
             System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
             String coords = scan.nextLine();
-            System.out.println(coords);
-            //checkWinGame();
-        //}
+            parseInput(coords);
+            winGame = checkWinGame();
+        }
+        System.out.println("Congrats! You Win!");
+        scan.close();
     }
 }
