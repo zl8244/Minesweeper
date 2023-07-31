@@ -22,6 +22,10 @@ public class Minesweeper {
         return num;
     }
 
+    /**
+     * Creates the board the player sees, the board that indicates where the mines are, 
+     * and the board for the hints that indicate how many mines are in adjacent spaces
+     */
     private void initBoard() {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
@@ -33,6 +37,9 @@ public class Minesweeper {
         placeHints();
     }
 
+    /**
+     * Randomly places mines in spaces
+     */
     private void placeMines() {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
@@ -44,6 +51,9 @@ public class Minesweeper {
         }
     }
 
+    /**
+     * Places the hints for number of mines in adjacent spaces
+     */
     private void placeHints() {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
