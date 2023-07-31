@@ -1,12 +1,14 @@
 import java.util.*;
 
 public class Minesweeper {
-    private int[][] board;
+    private String[][] board;
     private boolean[][] mines;
+    private int[][] hints;
     
     public Minesweeper (){
-        board = new int[5][5];
+        board = new String[5][5];
         mines = new boolean[5][5];
+        hints = new int[5][5];
         initBoard();
     }
 
@@ -21,36 +23,35 @@ public class Minesweeper {
     }
 
     private void initBoard() {
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[i].length; j++) {
-                board[i][j] = 0;
-                mines[i][j] = false;
+        for(int row = 0; row < board.length; row++) {
+            for(int col = 0; col < board[row].length; col++) {
+                board[row][col] = "/";
+                mines[row][col] = false;
             }
         }
         placeMines();
     }
 
     private void placeMines() {
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board[i].length; j++) {
+        for(int row = 0; row < board.length; row++) {
+            for(int col = 0; col < board[row].length; col++) {
                 int num = randomNumGen();
                 if(num == 9) {
-                    board[i][j] = num;
-                    mines[i][j] = true;
+                    mines[row][col] = true;
                 }
             }
         }
     }
 
-    private void printRow(int[] row) {
-        for(int i : row) {
+    private void printRow(String[] row) {
+        for(String i : row) {
             System.out.print(i + " ");
         }
         System.out.println();
     }
 
     private void printBoard() {
-        for(int[] row : board) {
+        for(String[] row : board) {
             printRow(row);
         }
     }
