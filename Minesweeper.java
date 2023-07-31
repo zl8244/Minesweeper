@@ -4,12 +4,26 @@ public class Minesweeper {
     private String[][] board;
     private boolean[][] mines;
     private int[][] hints;
+    private boolean[][] revealedBoard;
+    private boolean winGame;
     
     public Minesweeper (){
         board = new String[5][5];
         mines = new boolean[5][5];
         hints = new int[5][5];
+        revealedBoard = new boolean[5][5];
+        winGame = false;
         initBoard();
+    }
+
+    private boolean checkWinGame() {
+        for(int row = 0; row < revealedBoard.length; row++) {
+            for(int col = 0; col < revealedBoard[row].length; col++) {
+                if(!revealedBoard[row][col])
+                    return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -30,7 +44,7 @@ public class Minesweeper {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
                 board[row][col] = "/";
-                mines[row][col] = false;
+                revealedBoard[row][col] = false;
             }
         }
         placeMines();
@@ -44,9 +58,10 @@ public class Minesweeper {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
                 int num = randomNumGen();
-                if(num == 9) {
+                if(num == 9)
                     mines[row][col] = true;
-                }
+                else 
+                    mines[row][col] = false;
             }
         }
     }
@@ -130,6 +145,13 @@ public class Minesweeper {
     }
 
     public void runGame() {
-        printBoard();
+        Scanner scan = new Scanner(System.in);
+        //while(!winGame) {
+            printBoard();
+            System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
+            String coords = scan.nextLine();
+            System.out.println(coords);
+            //checkWinGame();
+        //}
     }
 }
