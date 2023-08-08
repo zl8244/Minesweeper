@@ -35,7 +35,7 @@ public class Minesweeper {
      */
     private int randomNumGen() {
         Random random = new Random();
-        int num = random.nextInt(10);
+        int num = random.nextInt(6);
         return num;
     }
 
@@ -57,7 +57,7 @@ public class Minesweeper {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
                 int num = randomNumGen();
-                if(num == 9 && (row != x && col != y))
+                if(num == 5 && (row != x && col != y))
                     mines[row][col] = true;
                 else 
                     mines[row][col] = false;
@@ -167,7 +167,8 @@ public class Minesweeper {
             revealSpace(coords[0], coords[1]);
             winGame = checkWinGame();
         }
-        System.out.println("Congrats! You Win!");
+        if(winGame)
+            System.out.println("Congrats! You Win!");
         scan.close();
     }
 }
