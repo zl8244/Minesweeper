@@ -74,28 +74,28 @@ public class Minesweeper {
                 if(!mines[row][col]) {
                     int hint = 0;
                     // check above
-                    if(row-1 != -1 && mines[row-1][col])
+                    if(row-1 >= 0 && mines[row-1][col])
                         hint++;
                     // check below
-                    if(row+1 != board.length && mines[row+1][col])
+                    if(row+1 < board.length && mines[row+1][col])
                         hint++;
                     // check left
-                    if(col-1 != -1 && mines[row][col-1])
+                    if(col-1 >= 0 && mines[row][col-1])
                         hint++;
                     // check right
-                    if(col+1 != board[row].length && mines[row][col+1])
+                    if(col+1 < board[row].length && mines[row][col+1])
                         hint++;
                     // check top-left
-                    if((row-1 != -1 && col-1 != -1) && mines[row-1][col-1])
+                    if((row-1 >= 0 && col-1 >= 0) && mines[row-1][col-1])
                         hint++;
                     // check top-right
-                    if((row-1 != -1 && col+1 != board[row].length) && mines[row-1][col+1])
+                    if((row-1 >= 0 && col+1 < board[row].length) && mines[row-1][col+1])
                         hint++;
                     // check bottom-left
-                    if((row+1 != board.length && col-1 != -1) && mines[row+1][col-1])
+                    if((row+1 < board.length && col-1 >= 0) && mines[row+1][col-1])
                         hint++;
                     // check bottom-right
-                    if((row+1 != board.length && col+1 != board[row].length) && mines[row+1][col+1])
+                    if((row+1 < board.length && col+1 < board[row].length) && mines[row+1][col+1])
                         hint++;
                     hints[row][col] = hint;
                 } else {
@@ -137,6 +137,26 @@ public class Minesweeper {
         return result;
     }
 
+    private void initalReveal(int x, int y){
+        revealSpace(x, y);
+        if(x-1 >= 0 && !mines[x-1][y]) 
+            revealSpace(x-1, y);
+        if(x+1 < board.length && !mines[x+1][y])
+            revealSpace(x+1, y);
+        if(y-1 >= 0 && !mines[x][y-1])
+            revealSpace(x, y-1);
+        if(y+1 < board[x].length && !mines[x][y+1])
+            revealSpace(x, y+1);
+        if((x-1 >= 0 && y-1 >= 0) && !mines[x-1][y-1])
+            revealSpace(x-1, y-1);
+        if((x-1 >= 0 && y+1 < board[x-1].length) && !mines[x-1][y+1])
+            revealSpace(x-1, y+1);
+        if((x+1 < board.length && y-1 >= 0) && !mines[x+1][y-1])
+            revealSpace(x+1, y-1);
+        if((x+1 < board.length && y+1 < board[x+1].length) && !mines[x+1][y+1])
+            revealSpace(x+1, y+1);
+    }
+
     private void revealSpace(int x, int y){
         if(mines[x][y]) {
             System.out.println("You revealed a mine! You Lose!");
@@ -158,7 +178,7 @@ public class Minesweeper {
         int[] coords = parseInput(input);
         placeMines(coords[0], coords[1]);
         placeHints();
-        revealSpace(coords[0], coords[1]);
+        initalReveal(coords[0], coords[1]);
         while(!winGame && !loseGame) {
             printBoard();
             System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
