@@ -139,22 +139,46 @@ public class Minesweeper {
 
     private void initalReveal(int x, int y){
         revealSpace(x, y);
-        if(x-1 >= 0 && !mines[x-1][y]) 
-            revealSpace(x-1, y);
-        if(x+1 < board.length && !mines[x+1][y])
-            revealSpace(x+1, y);
-        if(y-1 >= 0 && !mines[x][y-1])
-            revealSpace(x, y-1);
-        if(y+1 < board[x].length && !mines[x][y+1])
-            revealSpace(x, y+1);
-        if((x-1 >= 0 && y-1 >= 0) && !mines[x-1][y-1])
-            revealSpace(x-1, y-1);
-        if((x-1 >= 0 && y+1 < board[x-1].length) && !mines[x-1][y+1])
-            revealSpace(x-1, y+1);
-        if((x+1 < board.length && y-1 >= 0) && !mines[x+1][y-1])
-            revealSpace(x+1, y-1);
-        if((x+1 < board.length && y+1 < board[x+1].length) && !mines[x+1][y+1])
-            revealSpace(x+1, y+1);
+        int row = x;
+        int col = y;
+        while(row-1 >= 0 && !mines[row-1][col]) {
+            --row;
+            revealSpace(row, col);
+            while(col-1 >= 0 && !mines[row][col-1]) {
+                --col;
+                revealSpace(row, col);
+            }
+            col = y;
+            while(col+1 < board[x].length && !mines[row][col+1]) {
+                ++col;
+                revealSpace(row, col);
+            }
+        }
+        row = x;
+        while(row+1 < board.length && !mines[row+1][col]){
+            ++row;
+            revealSpace(row, col);
+            while(col-1 >= 0 && !mines[row][col-1]) {
+                --col;
+                revealSpace(row, col);
+            }
+            col = y;
+            while(col+1 < board[x].length && !mines[row][col+1]) {
+                ++col;
+                revealSpace(row, col);
+            }
+        }
+        row = x;
+        col = y;
+        while(col-1 >= 0 && !mines[row][col-1]) {
+            --col;
+            revealSpace(row, col);
+        }
+        col = y;
+        while(col+1 < board[x].length && !mines[row][col+1]) {
+            ++col;
+            revealSpace(row, col);
+        }
     }
 
     private void revealSpace(int x, int y){
