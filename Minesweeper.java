@@ -15,7 +15,6 @@ public class Minesweeper {
         revealedBoard = new boolean[5][5];
         winGame = false;
         loseGame = false;
-        initBoard();
     }
 
     private boolean checkWinGame() {
@@ -49,20 +48,16 @@ public class Minesweeper {
             for(int col = 0; col < board[row].length; col++) {
                 board[row][col] = "/";
                 revealedBoard[row][col] = false;
+                mines[row][col] = false;
             }
         }
-        placeMines();
-        placeHints();
     }
 
-    /**
-     * Randomly places mines in spaces
-     */
-    private void placeMines() {
+    private void placeMines(int x, int y) {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
                 int num = randomNumGen();
-                if(num == 9)
+                if(num == 9 && (row != x && col != y))
                     mines[row][col] = true;
                 else 
                     mines[row][col] = false;
@@ -134,11 +129,12 @@ public class Minesweeper {
         }
     }
 
-    private void parseInput(String coords) {
+    private int[] parseInput(String coords) {
         String[] coordinates = coords.split(",");
         int x = Integer.parseInt(coordinates[0]);
         int y = Integer.parseInt(coordinates[1]);
-        revealSpace(x, y);
+        int[] result = {x,y};
+        return result;
     }
 
     private void revealSpace(int x, int y){
@@ -154,12 +150,21 @@ public class Minesweeper {
     }
 
     public void runGame() {
+        initBoard();
+        printBoard();
         Scanner scan = new Scanner(System.in);
+        System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
+        String input = scan.nextLine();
+        int[] coords = parseInput(input);
+        placeMines(coords[0], coords[1]);
+        placeHints();
+        revealSpace(coords[0], coords[1]);
         while(!winGame && !loseGame) {
             printBoard();
             System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
-            String coords = scan.nextLine();
-            parseInput(coords);
+            input = scan.nextLine();
+            coords = parseInput(input);
+            revealSpace(coords[0], coords[1]);
             winGame = checkWinGame();
         }
         System.out.println("Congrats! You Win!");
