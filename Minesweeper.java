@@ -153,8 +153,10 @@ public class Minesweeper {
                 ++col;
                 revealSpace(row, col);
             }
+            col = y;
         }
         row = x;
+        col = y;
         while(row+1 < board.length && !mines[row+1][col]){
             ++row;
             revealSpace(row, col);
@@ -167,6 +169,7 @@ public class Minesweeper {
                 ++col;
                 revealSpace(row, col);
             }
+            col = y;
         }
         row = x;
         col = y;
