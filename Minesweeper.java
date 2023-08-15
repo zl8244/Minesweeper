@@ -152,6 +152,31 @@ public class Minesweeper {
         return result;
     }
 
+    private void revealAllAdjZero(int x, int y){
+        revealSpace(x, y);
+        int row = x;
+        int col = y;
+        while(row-1 >= 0 && hints[row-1][col] == 0) {
+            --row;
+            revealSpace(row, col);
+        }
+        row = x;
+        while(row+1 < board.length && hints[row][col] == 0) {
+            ++row;
+            revealSpace(row, col);
+        }
+        row = x;
+        while(col-1 >= 0 && hints[row][col-1] == 0) {
+            --col;
+            revealSpace(row, col);
+        }
+        col = y;
+        while(col+1 < board[row].length && hints[row][col+1] == 0) {
+            ++col;
+            revealSpace(row, col);
+        }
+    }
+
     private void initalReveal(int x, int y){
         revealSpace(x, y);
         int row = x;
@@ -220,7 +245,8 @@ public class Minesweeper {
         int[] coords = parseInput(input);
         placeMines(coords[0], coords[1]);
         placeHints();
-        initalReveal(coords[0], coords[1]);
+        //initalReveal(coords[0], coords[1]);
+        revealAllAdjZero(coords[0], coords[1]);
         while(!winGame && !loseGame) {
             printBoard();
             System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
