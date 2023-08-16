@@ -7,12 +7,26 @@ public class Minesweeper {
     private boolean[][] revealedBoard;
     private boolean winGame;
     private boolean loseGame;
+    private int totalRow;
+    private int totalCol;
     
-    public Minesweeper (){
-        board = new String[5][5];
-        mines = new boolean[5][5];
-        hints = new int[5][5];
-        revealedBoard = new boolean[5][5];
+    public Minesweeper(String diff){
+        if(diff.equals("E") || diff.equals("e")) {
+            totalRow = 5;
+            totalCol = 5;
+        }
+        if(diff.equals("M") || diff.equals("m")) {
+            totalRow = 7;
+            totalCol = 7;
+        } 
+        if(diff.equals("H") || diff.equals("h")) {
+            totalRow = 10;
+            totalCol = 10;
+        }
+        board = new String[totalRow][totalCol];
+        mines = new boolean[totalRow][totalCol];
+        hints = new int[totalRow][totalCol];
+        revealedBoard = new boolean[totalRow][totalCol];
         winGame = false;
         loseGame = false;
     }
