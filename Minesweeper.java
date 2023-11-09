@@ -49,7 +49,7 @@ public class Minesweeper {
      */
     private int randomNumGen() {
         Random random = new Random();
-        int num = random.nextInt(6);
+        int num = random.nextInt(10);
         return num;
     }
 
@@ -71,7 +71,7 @@ public class Minesweeper {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
                 int num = randomNumGen();
-                if(num == 5 && (row != x && col != y))
+                if(num == 9 && (row != x && col != y))
                     mines[row][col] = true;
                 else 
                     mines[row][col] = false;
@@ -151,59 +151,41 @@ public class Minesweeper {
         return result;
     }
 
-    private void initalReveal(int x, int y){
-        revealSpace(x, y);
-        int row = x;
-        int col = y;
-        while(row-1 >= 0 && !mines[row-1][col]) {
-            --row;
-            revealSpace(row, col);
-            while(col-1 >= 0 && !mines[row][col-1]) {
-                --col;
-                revealSpace(row, col);
-            }
-            col = y;
-            while(col+1 < board[x].length && !mines[row][col+1]) {
-                ++col;
-                revealSpace(row, col);
-            }
-            col = y;
-        }
-        row = x;
-        col = y;
-        while(row+1 < board.length && !mines[row+1][col]){
-            ++row;
-            revealSpace(row, col);
-            while(col-1 >= 0 && !mines[row][col-1]) {
-                --col;
-                revealSpace(row, col);
-            }
-            col = y;
-            while(col+1 < board[x].length && !mines[row][col+1]) {
-                ++col;
-                revealSpace(row, col);
-            }
-            col = y;
-        }
-        row = x;
-        col = y;
-        while(col-1 >= 0 && !mines[row][col-1]) {
-            --col;
-            revealSpace(row, col);
-        }
-        col = y;
-        while(col+1 < board[x].length && !mines[row][col+1]) {
-            ++col;
-            revealSpace(row, col);
-        }
-    }
-
     private void revealSpace(int x, int y){
         if(mines[x][y]) {
             System.out.println("You revealed a mine! You Lose!");
             loseGame = true;
+            board[x][y] = Integer.toString(hints[x][y]);
+            revealedBoard[x][y] = true;
         } else if(revealedBoard[x][y]) {
             System.out.println("You already revealed this space. Try Again.");
+        } else if(hints[x][y] == 0) {
+            board[x][y] = Integer.toString(hints[x][y]);
+            revealedBoard[x][y] = true;
+            if(x-1 > -1) {
+                board[x-1][y] = Integer.toString(hints[x-1][y]);
+                revealedBoard[x-1][y] = true;
+            }
+            if(y-1 > -1) {
+                board[x][y-1] = Integer.toString(hints[x][y-1]);
+                revealedBoard[x][y-1] = true;
+            }
+            if(x-1 > -1 && y-1 > -1) {
+                board[x-1][y-1] = Integer.toString(hints[x-1][y-1]);
+                revealedBoard[x-1][y-1] = true;
+            }
+            if(x+1 < board.length) {
+                board[x+1][y] = Integer.toString(hints[x+1][y]);
+                revealedBoard[x+1][y] = true;
+            }
+            if(y+1 < board[x].length) {
+                board[x][y+1] = Integer.toString(hints[x][y+1]);
+                revealedBoard[x][y+1] = true;
+            }
+            if(x+1 <board.length && y+1 < board[x+1].length) {
+                board[x+1][y+1] = Integer.toString(hints[x+1][y+1]);
+                revealedBoard[x+1][y+1] = true;
+            }
         } else {
             board[x][y] = Integer.toString(hints[x][y]);
             revealedBoard[x][y] = true;
@@ -219,7 +201,7 @@ public class Minesweeper {
         int[] coords = parseInput(input);
         placeMines(coords[0], coords[1]);
         placeHints();
-        initalReveal(coords[0], coords[1]);
+        revealSpace(coords[0], coords[1]);
         while(!winGame && !loseGame) {
             printBoard();
             System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
