@@ -5,6 +5,7 @@ public class Minesweeper {
     private boolean[][] mines;
     private int[][] hints;
     private boolean[][] revealedBoard;
+    private boolean[][] flags;
     private boolean winGame;
     private boolean loseGame;
     private int totalRow;
@@ -27,10 +28,15 @@ public class Minesweeper {
         mines = new boolean[totalRow][totalCol];
         hints = new int[totalRow][totalCol];
         revealedBoard = new boolean[totalRow][totalCol];
+        flags = new boolean[totalRow][totalCol];
         winGame = false;
         loseGame = false;
     }
 
+    /**
+     * Checks if the game has been won
+     * @return if the game has been won
+     */
     private boolean checkWinGame() {
         for(int row = 0; row < revealedBoard.length; row++) {
             for(int col = 0; col < revealedBoard[row].length; col++) {
@@ -63,10 +69,16 @@ public class Minesweeper {
                 board[row][col] = "/";
                 revealedBoard[row][col] = false;
                 mines[row][col] = false;
+                flags[row][col] = false;
             }
         }
     }
 
+    /**
+     * Randomly places mines on the board except the x and y coordinate
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     private void placeMines(int x, int y) {
         for(int row = 0; row < board.length; row++) {
             for(int col = 0; col < board[row].length; col++) {
@@ -143,6 +155,11 @@ public class Minesweeper {
         }
     }
 
+    /**
+     * Parses inputted coordinates into usable data
+     * @param coords the inputed coordinates seperated by a comma(x,y)
+     * @return an array with index 0 being the x coordinate and index 1 being the y coordinate
+     */
     private int[] parseInput(String coords) {
         String[] coordinates = coords.split(",");
         int x = Integer.parseInt(coordinates[0]);
@@ -151,6 +168,11 @@ public class Minesweeper {
         return result;
     }
 
+    /**
+     * Reveals space at x and y, if the space is 0 then it reveals everything around it
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     private void revealSpace(int x, int y){
         if(mines[x][y]) {
             System.out.println("You revealed a mine! You Lose!");
@@ -192,6 +214,24 @@ public class Minesweeper {
         }
     }
 
+    /**
+     * Makes the space at x and y a flagged space, preventing the space from being revealed
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
+    private void flagSpace(int x, int y) {
+        if(flags[x][y]) {
+            board[x][y] = "/";
+            flags[x][y] = false;
+        } else {
+            board[x][y] = "F";
+            flags[x][y] = true;
+        }
+    }
+
+    /**
+     * Runs the Minesweeper game
+     */
     public void runGame() {
         initBoard();
         printBoard();
@@ -204,10 +244,29 @@ public class Minesweeper {
         revealSpace(coords[0], coords[1]);
         while(!winGame && !loseGame) {
             printBoard();
-            System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
+            System.out.println("What would you like to do?");
+            System.out.println("(D)ig");
+            System.out.println("(F)lag/Unflag");
             input = scan.nextLine();
-            coords = parseInput(input);
-            revealSpace(coords[0], coords[1]);
+            if(input.equals("D")) {
+                System.out.println("Enter coordinates to reveal seperated by a comma(x,y): ");
+                input = scan.nextLine();
+                coords = parseInput(input);
+                if(!flags[coords[0]][coords[1]]) {
+                    revealSpace(coords[0], coords[1]);
+                } else {
+                    System.out.println("That space has a flag!");
+                }
+            } else if(input.equals("F")) {
+                System.out.println("Enter coordinates to flag seperated by a comma(x,y): ");
+                input = scan.nextLine();
+                coords = parseInput(input);
+                if(!revealedBoard[coords[0]][coords[1]]) {
+                    flagSpace(coords[0], coords[1]);
+                } else {
+                    System.out.println("That space has already been revealed!");
+                }
+            }
             winGame = checkWinGame();
         }
         if(winGame)
