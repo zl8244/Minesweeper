@@ -196,6 +196,10 @@ public class Minesweeper {
                 board[x-1][y-1] = Integer.toString(hints[x-1][y-1]);
                 revealedBoard[x-1][y-1] = true;
             }
+            if(x-1 > -1 && y+1 < board[x-1].length) {
+                board[x-1][y+1] = Integer.toString(hints[x-1][y+1]);
+                revealedBoard[x-1][y+1] = true;
+            }
             if(x+1 < board.length) {
                 board[x+1][y] = Integer.toString(hints[x+1][y]);
                 revealedBoard[x+1][y] = true;
@@ -204,9 +208,13 @@ public class Minesweeper {
                 board[x][y+1] = Integer.toString(hints[x][y+1]);
                 revealedBoard[x][y+1] = true;
             }
-            if(x+1 <board.length && y+1 < board[x+1].length) {
+            if(x+1 < board.length && y+1 < board[x+1].length) {
                 board[x+1][y+1] = Integer.toString(hints[x+1][y+1]);
                 revealedBoard[x+1][y+1] = true;
+            }
+            if(x+1 < board.length && y-1 > -1) {
+                board[x+1][y-1] = Integer.toString(hints[x+1][y-1]);
+                revealedBoard[x+1][y-1] = true;
             }
         } else {
             board[x][y] = Integer.toString(hints[x][y]);
